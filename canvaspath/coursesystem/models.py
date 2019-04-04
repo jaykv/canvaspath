@@ -31,7 +31,7 @@ class Professor(models.Model):
 	title = models.TextField()
 
 class Course(models.Model):
-	course_id = models.IntegerField(primary_key=True)
+	course_id = models.TextField(primary_key=True)
 	course_name = models.TextField()
 	course_description = models.TextField()
 
