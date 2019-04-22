@@ -5,6 +5,36 @@ from django.contrib.auth.hashers import make_password
 import os, csv
 
 def populate_professors():
+	file = os.path.join(settings.BASE_DIR, 'Professors.csv')
+	with open(file) as f:
+		lines = csv.DictReader(f)
+		courses = []
+		for row in lines:
+			try:
+				first, last = row['Name'].split(" ", 1)
+				new_user = User(first_name=first,
+								last_name=last,
+								username=row['Email'],
+								password=make_password(row['Password']))
+				new_user.save()
+
+				new_prof = Professor(user=new_user, 
+										email=row['Email'], 
+										name=row['Name'], 
+										age=row['Age'], 
+										gender=row['Gender'],
+										office_address=row['Office'],
+										department=row['Department'],
+										title=row['Title'])
+
+				new_prof.save()
+
+				if row['Title'] == 'Head':
+					new_dept = Department(dept_id=row['Department'], dept_name=row['Department Name'], dept_head=new_prof)
+					new_dept.save()
+
+			except:
+				print("there was a problem with row", row)
 
 def populate_students():
 	file = os.path.join(settings.BASE_DIR, 'Students.csv')
@@ -44,32 +74,47 @@ def populate_students():
 					if course_id not in courses:
 						new_course = Course(course_id=course_id, course_name=course_name, course_description=course_description)
 						courses.append(course_id)
+						new_course.save()
 
 					section_type = row[course + ' Type']
 					course_sec = row[course + ' Section']
 					course_sec_limit = row[course + ' Section Limit'] 
 					new_section = Sections(course_id=course_id, sec_no=course_sec, section_type=section_type, limit=course_sec_limit, prof_team=None)
+					new_section.save()
 
 					if course_type == 'Cap':
 						new_cap_section = Capstone_section(course_id=course_id, sec_no=course_sec, project_no=1, sponsor_id=None)
 						new_cap_team = Capstone_Team(course_id=course_id, sec_no=course_sec, project_no=1, capstone_team_id=1)
 						new_cap_member = Capstone_Team_Members(student_email=row['Email'], capstone_team_id=1, course_id=course_id, sec_no=course_sec)
+						
+						new_cap_section.save()
+						new_cap_team.save()
+						new_cap_member.save()
 					
 					new_enrolls = Enrolls(student_email=row['Email'], course_id=course_id, sec_no=course_sec)
-					
+					new_enrolls.save()
+
 					hw_no = row[course + ' HW_No']
 					if hw_no != '':
 						hw_details = row[course + ' HW_Details']
 						hw_grade = row[course + ' HW_Grade']
+						
 						new_hw = Homework(course_id=course_id, sec_no=course_sec, hw_no=hw_no, hw_details=hw_details)
 						new_hw_grade = Homework_grades(student_email=row['Email'], course_id=course_id, sec_no=course_sec, hw_no=hw_no, hw_grade=hw_grade)
+
+						new_hw.save()
+						new_hw_grade.save()
 
 					exam_no = row[course + ' EXAM_No']
 					if exam_no != '':
 						exam_details = row[course + ' Exam_details']
 						exam_grade = row[course + ' EXAM_Grade']
+						
 						new_exam = Exams(course_id=course_id, sec_no=course_sec, exam_no=exam_no, exam_details=exam_details)
 						new_exam_grade = Exam_grades(student_email=row['Email'], course_id=course_id, sec_no=course_sec, exam_no=exam_no, exam_grade=exam_grade)
+						
+						new_exam.save()
+						new_exam_grade.save()
 			except:
 		 		print("there was a problem with row", row)
 

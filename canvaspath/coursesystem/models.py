@@ -21,12 +21,9 @@ class Student(models.Model):
 
 
 class Department(models.Model):
+	dept_id = models.TextField(primary_key=True)
 	dept_name = models.TextField()
 	dept_head = models.TextField()
-
-	class Meta:
-		unique_together = (('dept_name', 'dept_head'),)
-
 
 class Professor(models.Model):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
