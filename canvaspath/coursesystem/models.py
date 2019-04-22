@@ -37,7 +37,7 @@ class Course(models.Model):
 
 
 class Prof_teams(models.Model):
-	team_id = models.IntegerField(primary_key=True)
+	teaching_team_id = models.IntegerField(primary_key=True)
 
 class Sections(models.Model):
 	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -66,7 +66,7 @@ class Homework_grades(models.Model):
 	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
 	sec_no = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	hw_no = models.ForeignKey(Homework, on_delete=models.CASCADE)
-	grade = models.IntegerField()
+	hw_grade = models.IntegerField()
 
 class Exams(models.Model):
 	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
@@ -79,10 +79,28 @@ class Exam_grades(models.Model):
 	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
 	sec_no = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	exam_no = models.IntegerField()
-	grade = models.IntegerField()
+	exam_grade = models.IntegerField()
 
 class Capstone_section(models.Model):
 	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
 	sec_no = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	project_no = models.IntegerField()
 	sponsor_id = models.EmailField()
+
+class Capstone_Team(models.Model):
+	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
+	sec_no = models.ForeignKey(Sections, on_delete=models.CASCADE)
+	capstone_team_id = models.TextField(primary_key=True)
+	project_no = models.IntegerField()
+
+class Capstone_Team_Members(models.Model):
+	student_email = models.EmailField(max_length=70)
+	capstone_team_id = models.ForeignKey(Capstone_Team, on_delete=models.CASCADE)
+	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
+	sec_no =models.ForeignKey(Sections, on_delete=models.CASCADE)
+
+class Capstone_grades(models.Model):
+	course_id = models.ForeignKey(Course, on_delete=models.CASCADE)
+	sec_no =models.ForeignKey(Sections, on_delete=models.CASCADE)
+	capstone_team_id = models.ForeignKey(Capstone_Team, on_delete=models.CASCADE)
+	capstone_grade = models.IntegerField()
