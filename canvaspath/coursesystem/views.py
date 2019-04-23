@@ -49,7 +49,7 @@ def signup(request):
 	return render(request, 'coursesystem/signup.html', {'form': form})
 
 def student_home(request):
-	if not is_student(request.user):
+	if not request.user.is_authenticated or not is_student(request.user):
 		return redirect('/')
 
 	student_courses = Enrolls.objects.filter(student_email=request.user.username)
@@ -85,13 +85,13 @@ def student_home(request):
 	return render(request,'coursesystem/student/home.html', context)
 
 def faculty_home(request):
-	if not is_faculty(request.user):
+	if not request.user.is_authenticated or not not is_faculty(request.user):
 		return redirect('/')
 
 	return render(request,'coursesystem/faculty/home.html')
 
 def admin_home(request):
-	if not request.user.is_superuser:
+	if not request.user.is_authenticated or not not request.user.is_superuser:
 		return redirect('/')
 
 	return render(request,'coursesystem/admin/home.html')
