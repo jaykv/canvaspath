@@ -5,10 +5,10 @@ from coursesystem.models import *
 from . import populate
 
 def is_student(user):
-	return Student.objects.get(user=user)
+	return Student.objects.filter(user=user).exists()
 
 def is_faculty(user):
-	return Professor.objects.get(user=user)
+	return Professor.objects.filter(user=user).exists()
 
 def calc_letter_grade(grade):
 	from math import ceil
@@ -85,13 +85,28 @@ def student_home(request):
 	return render(request,'coursesystem/student/home.html', context)
 
 def faculty_home(request):
-	if not request.user.is_authenticated or not not is_faculty(request.user):
+	if not request.user.is_authenticated or not is_faculty(request.user):
 		return redirect('/')
 
-	return render(request,'coursesystem/faculty/home.html')
+	prof_team_ids = [x.teaching_team_id for x in Prof_team_members.objects.filter(prof_email=request.user.username)]
+	if prof_team_ids:
+		prof_courses = Sections.objects.filter(prof_team__in=prof_team_ids)
+		for section in prof_courses:
+			teaching_team_id = section.prof_team.teaching_team_id
+			prof_emails = [x.prof_email for x in Prof_team_members.objects.filter(teaching_team_id=teaching_team_id)]
+			profs = [x for x in Professor.objects.filter(email__in=prof_emails)]
+			section.profs = profs
+			section.hws = []
+			section.exams = []
+			section.grade = '80'
+			section.letter_grade = 'A'
+		context = {
+			'teaching': prof_courses
+		}
+	return render(request,'coursesystem/faculty/home.html', context)
 
 def admin_home(request):
-	if not request.user.is_authenticated or not not request.user.is_superuser:
+	if not request.user.is_authenticated or not request.user.is_superuser:
 		return redirect('/')
 
 	return render(request,'coursesystem/admin/home.html')
