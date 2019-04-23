@@ -154,18 +154,18 @@ def populate_students():
 					new_section = Sections.objects.get(course_id=course_id, sec_no=course_sec)
 					print('new section: ', e)
 
-				if section_type == 'Cap':
-					try:
-						new_cap_section = Capstone_section(course_section=new_section, project_no=1, sponsor_id=None)
-						new_cap_section.save()
+				# if section_type == 'Cap':
+				# 	try:
+				# 		new_cap_section = Capstone_section(course_section=new_section, project_no=1, sponsor_id=None)
+				# 		new_cap_section.save()
 
-						new_cap_team = Capstone_Team(course_section=new_section, project_no=1, capstone_team_id=1)
-						new_cap_team.save()
+				# 		new_cap_team = Capstone_Team(course_section=new_section, project_no=1, capstone_team_id=1)
+				# 		new_cap_team.save()
 
-						#new_cap_member = Capstone_Team_Members(student_email=row['Email'], capstone_team_id=1, course_section=new_section)
-						#new_cap_member.save()
-					except Exception as e:
-						print(e)
+				# 		# new_cap_member = Capstone_Team_Members(student_email=row['Email'], capstone_team_id=1, course_section=new_section)
+				# 		# new_cap_member.save()
+				# 	except Exception as e:
+				# 		print(e)
 				
 				try:
 					new_enrolls = Enrolls(student_email=row['Email'], course_section=new_section)
