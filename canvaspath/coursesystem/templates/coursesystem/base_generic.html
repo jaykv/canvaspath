@@ -23,5 +23,68 @@
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script>
+    $(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip(); 
+    });
+    </script>
+
+    <script>
+        $(".deletehw").click(function () {
+            var hw_id = this.id;
+            console.log(hw_id)
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'delete_hw' %}',
+                data: {
+                  'hw_id': hw_id
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                  $('#hw-' + hw_id).remove();
+                },
+              });
+        });
+
+        $(".deleteexam").click(function () {
+            var exam_id = this.id;
+            console.log(exam_id)
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'delete_exam' %}',
+                data: {
+                  'exam_id': exam_id
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                  $('#exam-' + exam_id).remove();
+                },
+              });
+        });
+
+
+        $(".addassignment").click(function () {
+            var sectionID = this.id;
+            var dataVal = $('.add-assignment-form-' + sectionID).serializeArray();
+
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'add_assignment' %}',
+                data: {
+                    'data': dataVal
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                    console.log('done');
+                },
+              }).done(function(data) {});
+        });
+    </script>
+
 	</body>
+
 </html>

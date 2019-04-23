@@ -1,6 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
+
 from coursesystem.models import * 
 from . import populate
 
@@ -82,6 +84,8 @@ def student_home(request):
 		letter_grade = calc_letter_grade(total_grade)
 		course.grade = total_grade
 		course.letter_grade = letter_grade
+
+	request.user.student = Student.objects.get(user=request.user)
 	context = {
 		'enrolled': student_courses
 	}
@@ -108,8 +112,13 @@ def faculty_home(request):
 			exams = [x for x in Exams.objects.filter(course_section=section)]
 			section.exams = exams
 			
+			student_emails = [x.student_email for x in Enrolls.objects.filter(course_section=section)]
+			section.students = [x for x in Student.objects.filter(email__in=student_emails)]
+
 			section.grade = '80'
 			section.letter_grade = 'A'
+
+		request.user.professor = Professor.objects.get(user=request.user)
 		context = {
 			'teaching': prof_courses
 		}
@@ -120,3 +129,27 @@ def admin_home(request):
 		return redirect('/')
 
 	return render(request,'coursesystem/admin/home.html')
+
+
+
+def add_assignment(request):
+	
+	return JsonResponse(data)
+
+def delete_exam(request):
+	examid = request.GET.get('exam_id')
+	try:
+		Exams.objects.get(pk=examid).delete()
+		data = {'success': True}
+	except:
+		data = {'success': False}
+	return JsonResponse(data)
+
+def delete_hw(request):
+	hwid = request.GET.get('hw_id')
+	try:
+		Homework.objects.get(pk=hwid).delete()
+		data = {'success': True}
+	except:
+		data = {'success': False}
+	return JsonResponse(data)

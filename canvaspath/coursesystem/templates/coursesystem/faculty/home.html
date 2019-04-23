@@ -10,15 +10,15 @@
                 <a class="nav-link" href="../"><i class="fas fa-home" style="color:#8CCEF9;"></i> Home</a>
             </li>
             <li>
-                <a class="nav-link" href="/inbox/"><i class="fas fa-envelope" style="color:#8CCEF9;"></i> Inbox</a>
+                <a class="nav-link" href="#"><i class="fas fa-envelope" style="color:#8CCEF9;"></i> Inbox</a>
             </li>
             <li>
-                <a class="nav-link" href="/instructions/"><i class="fas fa-calendar" style="color:#8CCEF9;"></i> Calendar</a>
+                <a class="nav-link" href="#"><i class="fas fa-calendar" style="color:#8CCEF9;"></i> Calendar</a>
             </li>
             <button id="referral" type="button" class="btn btn-sm btn-follow" data-toggle="popover" title="Share your referral link" data-content="Share the following link <a href='#'>https://socialnetdata.org/signup</a> with your friends for a chance to win a prize!"><i class="fas fa-bullhorn"></i> Alerts</button>
         </ul>
         <div>
-		    <a class="btn btn-search-bar" href="/create/" role="button"><i class="fas fa-question-circle"></i> Help</a>
+		    <a class="btn btn-search-bar" href="#" role="button"><i class="fas fa-question-circle"></i> Help</a>
             <a class="btn" href="/logout/"><i class="fa fa-sign-out-alt"></i> Logout</a>
         </div>
         <ul class="navbar-nav">
@@ -52,7 +52,7 @@
                     </div>
                     <div align="center">
 						<br/>
-						<h6>{{reqeuest.user.professor.dept_id}} Faculty</h6>
+						<h6>{{request.user.professor.department.dept_id}} Faculty</h6>
           				<span class="profile-email">{{request.user.username}}</span>
           				<br/>
           				<br/>
@@ -68,8 +68,6 @@
             </div>
             <hr />
             <div align="center">
-                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
-                </div>
                 <strong>
                     EE320
                 </strong>
@@ -79,8 +77,6 @@
             </div>
             <hr />
             <div align="center">
-                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
-                </div>
                 <strong>
                     MATH141
                 </strong>
@@ -91,7 +87,7 @@
             <hr />
         </div>
         <!-- 2nd column -->
-        <div class="col-md-7" style='background-color:#fff; margin-right: 10px; margin-left: 10px'>
+        <div class="col-lg-9 col-md-9 col-sm-12" style='background-color:#fff; margin-right: 10px; margin-left: 10px'>
             <br />
             <h4> <span style="padding-top:20px;padding-right: 20px; padding-left:20px;">Courses Teaching</span> </h4>
             <br />
@@ -113,15 +109,39 @@
 	            <div class="card-body">
 	            <div id="posttext" class="posttext">{{section.course_id.course_description}}</div>
 	            <hr />
-	            <h5>Assignments</h5>
-
+	            <h5>Assignments <a href="#" class="btn btn-sm btn-primary float-right">New</a></h5>
+	            <br />
 	            {%for hw in section.hws%}
-	            <details>
-				    <summary>Homework {{hw.hw_no}}<span style="font-weight: 600;" class="badge badge-pill badge-primary float-right">100 points</span></summary>
+	            <details id="hw-{{hw.id}}">
+				    <summary>Homework {{hw.hw_no}}
+				    	<span style="font-weight: 600;" class="badge badge-pill badge-info">100 points</span>
+				    	<button id="{{hw.id}}" class="deletehw btn btn-sm btn-danger float-right" href="#"><i class="fas fa-trash"></i></button>
+				    </summary>
 				    <p><div class="card">
 					  <div class="card-body">
-					    <p class="card-text">{{hw.hw_no.hw_details}}</p>
-					    <a href="#" class="btn btn-primary disabled">Upload</a>
+					    <p class="card-text">{{hw.hw_details}}</p>
+					    <details>
+					    	<summary>Grades</summary>
+					    	<p>
+					    		<ul class="list-group list-group-flush">
+						    		<form>
+						    		{%for student in section.students%}
+							  			<li class="list-group-item">
+							  				<abbr data-toggle="tooltip" title="{{student.email}}">{{student.name}}</abbr>
+
+							  				<span class="float-right">
+							  					Grade:
+							  					<input type="number" id="grade-{{student.id}}" name="grade-{{student.id}}" min="0" max="100">
+							  				</span>
+							  			</li>
+							  		{%endfor%}
+							  		<br/>
+							  		<button type="submit" class="btn btn-primary float-right">Save</button>
+							  		</form>
+								</ul>
+							</p>
+					    </details>
+					    <br/>
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
@@ -133,11 +153,35 @@
 				<hr />
 
 				{%for exam in section.exams%}
-	            <details>
-				    <summary>Exam {{exam.exam_no}}<span style="font-weight: 600;" class="badge badge-pill badge-primary float-right">100 points</span></summary>
+	            <details id="exam-{{exam.id}}">
+				    <summary>Exam {{exam.exam_no}}
+				    	<span style="font-weight: 600;" class="badge badge-pill badge-info">100 points</span>
+				    	<button id="{{exam.id}}" class="deleteexam btn btn-sm btn-danger float-right"><i class="fas fa-trash"></i></button>
+				    </summary>
 				    <p><div class="card">
 					  <div class="card-body">
 					    <p class="card-text">{{exam.exam_details}}</p>
+					    <details>
+					    	<summary>Grades</summary>
+					    	<p>
+					    		<ul class="list-group list-group-flush">
+						    		<form>
+						    		{%for student in section.students%}
+							  			<li class="list-group-item">
+							  				<abbr title="{{student.email}}">{{student.name}}</abbr>
+
+							  				<span class="float-right">
+							  					Grade:
+							  					<input type="number" id="grade-{{student.id}}" name="grade-{{student.id}}" min="0" max="100">
+							  				</span>
+							  			</li>
+							  		{%endfor%}
+							  		<br/>
+							  		<button type="submit" class="btn btn-primary float-right">Save</button>
+							  		</form>
+								</ul>
+							</p>
+					    </details>
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
@@ -172,7 +216,7 @@
             <hr />
         </div>
         <!-- column 3 -->
-        <div class="col-md-auto" style='background-color:#fff;'>
+<!--         <div class="col-md-auto" style='background-color:#fff;'>
             <h4 style="padding-top:20px;"> <span style="padding-right: 20px; padding-left:20px;">Grades</span> </h4>
             {%for section in teaching%}
 
@@ -187,7 +231,7 @@
 
             {%endfor%}
             <hr />
-        </div>
+        </div> -->
     </div>
 </div>
 {% endblock %}
