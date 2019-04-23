@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from compositefk.fields import CompositeForeignKey
 
 class Zipcode(models.Model):
 	zipcode = models.IntegerField(primary_key=True)
@@ -60,84 +59,55 @@ class Sections(models.Model):
 	sec_no = models.IntegerField()
 	section_type = models.TextField()
 	limit = models.IntegerField()
-	prof_team = models.ForeignKey(Prof_teams, on_delete=None)
+	prof_team = models.ForeignKey(Prof_teams, on_delete=None, null=True)
 
 	class Meta:
 		unique_together = (('course_id', 'sec_no'),)
 
-
 class Enrolls(models.Model):
 	student_email = models.TextField()
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
-
-	class Meta:
-		unique_together = (('course_section', 'student_email'),)
 
 class Homework(models.Model):
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	hw_no = models.IntegerField()
 	hw_details = models.TextField()
 
-	class Meta:
-		unique_together = (('course_section', 'hw_no'),)
-
-
 class Homework_grades(models.Model):
 	student_email = models.TextField()
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	hw_no = models.ForeignKey(Homework, on_delete=models.CASCADE)
-	hw_grade = models.IntegerField()
-
-	class Meta:
-		unique_together = (('course_section', 'student_email', 'hw_no'),)
-
+	hw_grade = models.FloatField()
 
 class Exams(models.Model):
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	exam_no = models.IntegerField()
 	exam_details = models.TextField()
 
-	class Meta:
-		unique_together = (('course_section', 'exam_no'),)
-
-
 class Exam_grades(models.Model):
 	student_email = models.TextField()
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
-	exam_no = models.IntegerField()
-	exam_grade = models.IntegerField()
-
-	class Meta:
-		unique_together = (('course_section', 'student_email', 'exam_no'),)
-
+	exam_no = models.ForeignKey(Exams, on_delete=models.CASCADE)
+	exam_grade = models.FloatField()
 
 class Capstone_section(models.Model):
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	project_no = models.IntegerField()
-	sponsor_id = models.EmailField()
+	sponsor_id = models.EmailField(null=True)
 
 	class Meta:
 		unique_together = (('course_section', 'project_no'),)
-
-
+		
 class Capstone_Team(models.Model):
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 	capstone_team_id = models.IntegerField()
 	project_no = models.IntegerField()
-
-	class Meta:	
-		unique_together = (('course_section', 'capstone_team_id'),)
-
 
 class Capstone_Team_Members(models.Model):
 	student_email = models.EmailField(max_length=70)
 	capstone_team_id = models.ForeignKey(Capstone_Team, on_delete=models.CASCADE)
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
 
-	class Meta:
-		unique_together = (('course_section', 'student_email', 'capstone_team_id'),)
-
-
 class Capstone_grades(models.Model):
 	capstone_team_id = models.ForeignKey(Capstone_Team, on_delete=models.CASCADE)
-	capstone_grade = models.IntegerField()
+	capstone_grade = models.FloatField()
