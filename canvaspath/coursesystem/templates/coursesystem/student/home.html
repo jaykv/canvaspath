@@ -1,0 +1,176 @@
+{% extends '.././base_generic.html' %}
+{% block title %}<title>Home</title>{% endblock %}
+{% block content %}
+{% load static %}
+<!-- Navigation bar -->
+<nav class="navbar border-bottom border-grey sticky-top navbar-expand-lg navbar-light" style="background-color: #fff;">
+    <div class="navbar-collapse collapse justify-content-between">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="../"><i class="fas fa-home" style="color:#8CCEF9;"></i> Home</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/inbox/"><i class="fas fa-envelope" style="color:#8CCEF9;"></i> Inbox</a>
+            </li>
+            <li>
+                <a class="nav-link" href="/instructions/"><i class="fas fa-calendar" style="color:#8CCEF9;"></i> Calendar</a>
+            </li>
+            <button id="referral" type="button" class="btn btn-sm btn-follow" data-toggle="popover" title="Share your referral link" data-content="Share the following link <a href='#'>https://socialnetdata.org/signup</a> with your friends for a chance to win a prize!"><i class="fas fa-bullhorn"></i> Alerts</button>
+        </ul>
+        <div>
+		    <a class="btn btn-search-bar" href="/create/" role="button"><i class="fas fa-question-circle"></i> Help</a>
+            <a class="btn" href="/logout/"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </div>
+        <ul class="navbar-nav">
+            <div class="dropdown navbar-user-dropdown">
+                <button class="btn btn-secondary dropdown-toggle btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="settings/">Settings</a>
+                </div>
+            </div>
+            <form class="navbar-form" role="search">
+                <div class="input-group-btn">
+                    <button class="btn btn-default btn-search" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+    </div>
+    </form>
+
+
+</nav>
+<!-- Body of Home Page -->
+<div class='container' style='padding-top: 10px;'>
+    <div class="row justify-content-md-center">
+        <!-- 1st column -->
+        <div class="col-md-auto" style='background-color:#fff;'>
+            <div class="content-panel">
+                <div class="panel-header">
+                    <div align="center">
+                        <h4 align="center">{{request.user.first_name}} {{request.user.last_name}}</h4>
+                        <div align="center">
+                            <input type="image" style="height: 100px;width: 100px;border-radius: 50%;" src="{% static 'images/image3.jpeg' %}">
+                        </div>
+                    </div>
+                    <div align="center">
+						<br/>
+          				<span class="profile-email">{{request.user.username}}</span>
+          				<br/>
+          				<br/>
+          				<button type="submit" name="profile" class="btn btn-follow">Profile</button>
+          			</div> 
+                </div>
+            </div>
+            <hr />
+            <div class="content-panel">
+                <div class="panel-header">
+                    <h5 align="center"><span>Announcements</span></h5>
+                </div>
+            </div>
+            <hr />
+            <div align="center">
+                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
+                </div>
+                <strong>
+                    EE320
+                </strong>
+            </div>
+            <div align="center" style="max-width:200px;">
+                Please complete the HW before due date!
+            </div>
+            <hr />
+            <div align="center">
+                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
+                </div>
+                <strong>
+                    MATH141
+                </strong>
+            </div>
+            <div align="center" style="max-width:200px;">
+                Don't forget to bring your calculator for exam on Friday!
+            </div>
+            <hr />
+        </div>
+        <!-- 2nd column -->
+        <div class="col-md-7" style='background-color:#fff; margin-right: 10px; margin-left: 10px'>
+            <br />
+            <h4> <span style="padding-top:20px;padding-right: 20px; padding-left:20px;">Courses</span> </h4>
+            <br />
+            
+            {%for enroll in enrolled %}
+            <div class="card" style="margin-bottom:15px;">
+            	<div class="card-header">
+	            <h5 style="margin:0;padding:0;">
+	                {{enroll.course_section.course_id.course_id}} Section {{enroll.course_section.sec_no}} &ndash; {{enroll.course_section.course_id.course_name}}
+	            </h5>
+	            <strong>
+	            	{%for prof in enroll.profs%}
+	            		<a href="mailto:{{prof.email}}">{{prof.name}}</a>
+	            	{%endfor%}
+	            </strong>
+	            </div>
+	            <div class="card-body">
+	            <div id="posttext" class="posttext">{{enroll.course_section.course_id.course_description}}</div>
+	            <hr />
+	            <h5>Assignments</h5>
+
+	            {%for hw in enroll.hws%}
+	            <details>
+				    <summary>Homework {{hw.hw_no.hw_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{hw.hw_grade}}/100</span></summary>
+				    <p><div class="card">
+					  <div class="card-body">
+					    <p class="card-text">{{hw.hw_no.hw_details}}</p>
+					    <a href="#" class="btn btn-primary disabled">Upload</a>
+					  </div>
+					  <div class="card-footer text-muted">
+					  	<span class="text-dark">Due: 5/9/2019</span>
+					  	<span class="text-light bg-success rounded float-right" style="padding-right:3px;padding-left:3px;">Submitted</span>
+					  </div>
+					  <div></div>
+
+		            <div> </div>
+					</div></p>
+				</details>
+				{%endfor%}
+				<hr />
+
+				{%for exam in enroll.exams%}
+	            <details>
+				    <summary>Exam {{exam.exam_no.exam_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{exam.exam_grade}}/100</span></summary>
+				    <p><div class="card">
+					  <div class="card-body">
+					    <p class="card-text">{{exam.exam_no.exam_details}}</p>
+					  </div>
+					  <div class="card-footer text-muted">
+					  	<span class="text-dark">Due: 5/9/2019</span>
+					  </div>
+					  <div></div>
+
+		            <div> </div>
+					</div></p>
+				</details>
+				{%endfor%}
+	        	</div>
+            </div>
+            {%endfor%}
+
+            <hr />
+        </div>
+        <!-- column 3 -->
+        <div class="col-md-auto" style='background-color:#fff;'>
+            <h4 style="padding-top:20px;"> <span style="padding-right: 20px; padding-left:20px;">Grades</span> </h4>
+            {%for enroll in enrolled%}
+
+            	<div class="card" style="margin-bottom:1rem;width: 12rem;">
+				  <div class="card-body">
+				    <h5 class="card-title">{{enroll.course_section.course_id.course_id}}</h5>
+				    <h6 class="card-subtitle mb-2 text-muted">{{enroll.course_section.course_id.course_name}}</h6>
+				    <p class="card-text">{{enroll.letter_grade}} &mdash; {{enroll.grade}}%</p>
+				    <a href="#" class="card-link">Details</a>
+				  </div>
+				</div>
+
+            {%endfor%}
+            <hr />
+        </div>
+    </div>
+</div>
+{% endblock %}
