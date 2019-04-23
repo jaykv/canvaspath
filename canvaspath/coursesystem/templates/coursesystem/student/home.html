@@ -101,11 +101,13 @@
 	            <h5 style="margin:0;padding:0;">
 	                {{enroll.course_section.course_id.course_id}} Section {{enroll.course_section.sec_no}} &ndash; {{enroll.course_section.course_id.course_name}}
 	            </h5>
+	            {%for prof in enroll.profs%}
 	            <strong>
-	            	{%for prof in enroll.profs%}
-	            		<a href="mailto:{{prof.email}}">{{prof.name}}</a>
-	            	{%endfor%}
-	            </strong>
+	            	
+	            		<a href="mailto:{{prof.email}}">{{prof.name}}</a> 
+	            	
+	            </strong>&ndash; <span>{{prof.office_address}}</span>
+	            {%endfor%}
 	            </div>
 	            <div class="card-body">
 	            <div id="posttext" class="posttext">{{enroll.course_section.course_id.course_description}}</div>
@@ -124,9 +126,6 @@
 					  	<span class="text-dark">Due: 5/9/2019</span>
 					  	<span class="text-light bg-success rounded float-right" style="padding-right:3px;padding-left:3px;">Submitted</span>
 					  </div>
-					  <div></div>
-
-		            <div> </div>
 					</div></p>
 				</details>
 				{%endfor%}
@@ -148,6 +147,23 @@
 					</div></p>
 				</details>
 				{%endfor%}
+
+				{%if enroll.course_section.section_type == 'Cap'%}
+				<h5 style="margin-top:2rem;">Capstone</h5>
+				<div>
+					<h6>Team Members <span class="badge badge-success float-right">Team ID: 1</span></h6>
+					<div>
+						<ul class="list-group list-group-flush">
+						  <li class="list-group-item">Cras justo odio</li>
+						  <li class="list-group-item">Dapibus ac facilisis in</li>
+						  <li class="list-group-item">Morbi leo risus</li>
+						  <li class="list-group-item">Porta ac consectetur ac</li>
+						  <li class="list-group-item">Vestibulum at eros</li>
+						</ul>
+					</div>
+					<h6>Sponsor: Dr. Bob Jones</h6>
+				</div>
+				{%endif%}
 	        	</div>
             </div>
             {%endfor%}
