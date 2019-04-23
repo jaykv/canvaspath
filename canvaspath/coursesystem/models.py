@@ -73,10 +73,13 @@ class Homework(models.Model):
 	hw_no = models.IntegerField()
 	hw_details = models.TextField()
 
+	class Meta:
+		unique_together = (('course_section', 'hw_no'),)
+
 class Homework_grades(models.Model):
 	student_email = models.TextField()
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
-	hw_no = models.ForeignKey(Homework, on_delete=models.CASCADE)
+	hw_no = models.ForeignKey(Homework, on_delete=models.SET_NULL, null=True)
 	hw_grade = models.FloatField()
 
 class Exams(models.Model):
@@ -84,10 +87,13 @@ class Exams(models.Model):
 	exam_no = models.IntegerField()
 	exam_details = models.TextField()
 
+	class Meta:
+		unique_together = (('course_section', 'exam_no'),)
+
 class Exam_grades(models.Model):
 	student_email = models.TextField()
 	course_section = models.ForeignKey(Sections, on_delete=models.CASCADE)
-	exam_no = models.ForeignKey(Exams, on_delete=models.CASCADE)
+	exam_no = models.ForeignKey(Exams, on_delete=models.SET_NULL, null=True)
 	exam_grade = models.FloatField()
 
 class Capstone_section(models.Model):

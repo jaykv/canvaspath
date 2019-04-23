@@ -117,7 +117,7 @@
 
 	            {%for hw in section.hws%}
 	            <details>
-				    <summary>Homework {{hw.hw_no.hw_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{hw.hw_grade}}/100</span></summary>
+				    <summary>Homework {{hw.hw_no}}<span style="font-weight: 600;" class="badge badge-pill badge-primary float-right">100 points</span></summary>
 				    <p><div class="card">
 					  <div class="card-body">
 					    <p class="card-text">{{hw.hw_no.hw_details}}</p>
@@ -134,10 +134,10 @@
 
 				{%for exam in section.exams%}
 	            <details>
-				    <summary>Exam {{exam.exam_no.exam_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{exam.exam_grade}}/100</span></summary>
+				    <summary>Exam {{exam.exam_no}}<span style="font-weight: 600;" class="badge badge-pill badge-primary float-right">100 points</span></summary>
 				    <p><div class="card">
 					  <div class="card-body">
-					    <p class="card-text">{{exam.exam_no.exam_details}}</p>
+					    <p class="card-text">{{exam.exam_details}}</p>
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>

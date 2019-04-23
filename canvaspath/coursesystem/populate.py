@@ -4,6 +4,37 @@ from coursesystem.models import *
 from django.contrib.auth.hashers import make_password
 import os, csv
 
+def update_exam():
+	for section in Sections.objects.all():
+		exam = Exams.objects.filter(course_section=section).first()
+
+		if exam:
+			Exams.objects.filter(course_section=section).delete()
+			try:
+				new_exam = Exams(course_section=section,exam_no=exam.exam_no,exam_details=exam.exam_details)
+				new_exam.save()
+
+				exam_grades = Exam_grades.objects.filter(course_section=section).update(exam_no=new_exam)
+			except Exception as e:
+				print(e)
+
+def update_hw():
+	for section in Sections.objects.all():
+		hw = Homework.objects.filter(course_section=section).first()
+
+		if hw:
+			Homework.objects.filter(course_section=section).delete()
+			try:
+				new_hw = Homework(course_section=section,hw_no=hw.hw_no,hw_details=hw.hw_details)
+				new_hw.save()
+
+				hw_grades = Homework_grades.objects.filter(course_section=section).update(hw_no=new_hw)
+			except Exception as e:
+				print(e)
+
+		#exams = [x for x in Exams.objects.filter(course_section=section)]
+		#section.exams = exams
+
 def update_capstone_sections():
 	sections = Sections.objects.filter(section_type='Cap')
 	for section in sections:

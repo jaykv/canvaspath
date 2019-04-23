@@ -27,6 +27,10 @@ def populate_data(request):
 		populate.update_dept_head()
 	if request.GET.get('populate') == 'capstone':
 		populate.update_capstone_sections()
+	if request.GET.get('populate') == 'homework':
+		populate.update_hw()
+	if request.GET.get('populate') == 'exam':
+		populate.update_exam()
 
 	return render(request,'coursesystem/home.html')
 
@@ -96,8 +100,14 @@ def faculty_home(request):
 			prof_emails = [x.prof_email for x in Prof_team_members.objects.filter(teaching_team_id=teaching_team_id)]
 			profs = [x for x in Professor.objects.filter(email__in=prof_emails)]
 			section.profs = profs
-			section.hws = []
-			section.exams = []
+			
+
+			hws = [x for x in Homework.objects.filter(course_section=section)]
+			section.hws = hws
+
+			exams = [x for x in Exams.objects.filter(course_section=section)]
+			section.exams = exams
+			
 			section.grade = '80'
 			section.letter_grade = 'A'
 		context = {
