@@ -65,6 +65,7 @@
             <div class="content-panel">
                 <div class="panel-header">
                     <h5 align="center"><span>Announcements</span></h5>
+                    <div align="center"><button type="submit" name="profile" class="btn btn-follow">New</button></div>
                 </div>
             </div>
             <hr />
@@ -110,7 +111,7 @@
 	            <div class="card-body">
 	            <div id="posttext" class="posttext">{{section.course_id.course_description}}</div>
 	            <hr />
-	            <h5>Assignments <button type="button" data-toggle="modal" data-target="#add-assignment-modal-{{section.id}}" class="btn btn-sm btn-primary float-right">New</button></h5>
+	            <h5>Assignments <button type="button" data-toggle="modal" data-target="#add-assignment-modal-{{section.id}}" class="btn btn-sm btn-primary float-right">Add</button></h5>
 
 			  	<div class="modal fade" id="add-assignment-modal-{{section.id}}" tabindex="-1" role="dialog" aria-labelledby="add-assignment-modal-{{section.id}}" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
@@ -183,7 +184,7 @@
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
-					  	<span class="text-light bg-success rounded float-right" style="padding-right:3px;padding-left:3px;">Submitted</span>
+					  	<span class="text-light bg-success rounded float-right" style="padding-right:3px;padding-left:3px;">Graded</span>
 					  </div>
 					</div></p>
 				</details>
