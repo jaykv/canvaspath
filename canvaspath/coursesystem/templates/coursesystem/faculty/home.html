@@ -26,7 +26,7 @@
             <div class="dropdown navbar-user-dropdown">
                 <button class="btn btn-secondary dropdown-toggle btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="settings/">Settings</a>
+                    <a class="dropdown-item" href="/password_change">Settings</a>
                 </div>
             </div>
             <form class="navbar-form" role="search">
@@ -111,7 +111,7 @@
 	            <div class="card-body">
 	            <div id="posttext" class="posttext">{{section.course_id.course_description}}</div>
 	            <hr />
-	            <h5>Assignments <button type="button" data-toggle="modal" data-target="#add-assignment-modal-{{section.id}}" class="btn btn-sm btn-primary float-right">Add</button></h5>
+	            <h5>Assignments <button type="button" data-toggle="modal" data-target="#add-assignment-modal-{{section.id}}" class="btn btn-sm btn-primary float-right">Add assignment</button></h5>
 
 			  	<div class="modal fade" id="add-assignment-modal-{{section.id}}" tabindex="-1" role="dialog" aria-labelledby="add-assignment-modal-{{section.id}}" aria-hidden="true">
 				  <div class="modal-dialog" role="document">
@@ -192,7 +192,7 @@
 				<hr />
 
 				{%for exam in section.exams%}
-	            <details id="exam-{{exam.id}}">
+	            <details style="margin-bottom:10px;" id="exam-{{exam.id}}">
 				    <summary>Exam {{exam.exam_no}}
 				    	<span style="font-weight: 600;" class="badge badge-pill badge-info">100 points</span>
 				    	<button id="{{exam.id}}" class="deleteexam btn btn-sm btn-danger float-right"><i class="fas fa-trash"></i></button>
@@ -233,9 +233,47 @@
 				{%endfor%}
 
 				{%if section.section_type == 'Cap'%}
-				<h5 style="margin-top:2rem;">Capstone</h5>
-				<div>
-					<h6>Team Members <span class="badge badge-success float-right">Team ID: 1</span></h6>
+
+				<div class="modal fade" id="add-team-modal-{{section.id}}" tabindex="-1" role="dialog" aria-labelledby="add-team-modal-{{section.id}}" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="add-team-modal">New team</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <form class="add-team-form-{{section.id}}">
+				          <div class="form-group">
+				            <label for="team-id" class="col-form-label">Team ID:</label>
+				            <input type="number" class="form-control" id="team-id" name="team_id" required>
+				          </div>
+				          <div class="form-group">
+				            <label for="project-no" class="col-form-label">Project Number:</label>
+				            <input type="number" class="form-control" id="project-no" name="project_no" required>
+				          </div>
+						  <div class="form-group">
+				            <label for="assignment-type" class="col-form-label">Team Members:</label>
+				            <select size="10" class="form-control" id="assignment-type" name="assignment_type" multiple required>
+				            	{%for student in section.students%}
+						      <option value="{{student.email}}">{{student.name}} &ndash; {{student.email}}</option>
+						      	{%endfor%}
+						    </select>
+				          </div>
+				        </form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" id="{{section.id}}" class="addteam btn btn-primary">Submit</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+				<h5 style="margin-top:2rem;">Capstone<button type="button" data-toggle="modal" data-target="#add-team-modal-{{section.id}}" class="btn btn-sm btn-primary float-right">Add team</button></h5>
+				<div style="margin-top:2rem;">
+					<h6>Team Members <span style="vertical-align: middle;" class="badge badge-success float-right align-middle">Team ID: 1</span></h6>
 					<div>
 						<ul class="list-group list-group-flush">
 						  <li class="list-group-item">Cras justo odio</li>

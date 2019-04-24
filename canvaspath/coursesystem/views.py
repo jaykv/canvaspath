@@ -51,10 +51,10 @@ def home(request):
 
 	return render(request,'coursesystem/home.html')
 
-def signup(request):
-	form = UserCreationForm
-	successurl = reverse_lazy('login')
-	return render(request, 'coursesystem/signup.html', {'form': form})
+# def signup(request):
+# 	form = UserCreationForm
+# 	successurl = reverse_lazy('login')
+# 	return render(request, 'coursesystem/signup.html', {'form': form})
 
 def student_home(request):
 	if not request.user.is_authenticated or not is_student(request.user):
