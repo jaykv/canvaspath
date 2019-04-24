@@ -56,6 +56,7 @@ def home(request):
 # 	successurl = reverse_lazy('login')
 # 	return render(request, 'coursesystem/signup.html', {'form': form})
 
+
 def student_home(request):
 	if not request.user.is_authenticated or not is_student(request.user):
 		return redirect('/')
@@ -64,13 +65,17 @@ def student_home(request):
 	for course in student_courses:
 		teaching_team_id = course.course_section.prof_team.teaching_team_id
 		prof_emails = [x.prof_email for x in Prof_team_members.objects.filter(teaching_team_id=teaching_team_id)]
-		profs = [x for x in Professor.objects.filter(email__in=prof_emails)]
+		profs = Professor.objects.filter(email__in=prof_emails)
 		course.profs = profs
 
 		hws = [x for x in Homework.objects.filter(course_section=course.course_section)]
 
 		for hw in hws:
 			try:
+				hw_grades = [x.hw_grade for x in hw.homework_grades_set.all()]
+				hw.max = max(hw_grades)
+				hw.min = min(hw_grades)
+				hw.avg =  sum(hw_grades) / len(hw_grades)
 				hw.hw_grade = Homework_grades.objects.get(student_email=request.user.username,hw_no=hw).hw_grade
 			except:
 				hw.hw_grade = None
@@ -79,7 +84,12 @@ def student_home(request):
 
 		exams = [x for x in Exams.objects.filter(course_section=course.course_section)]
 		for exam in exams:
+
 			try:
+				exam_grades = [x.exam_grade for x in exam.exam_grades_set.all()]
+				exam.max = max(exam_grades)
+				exam.min = min(exam_grades)
+				exam.avg =  sum(exam_grades) / len(exam_grades)
 				exam.exam_grade = Exam_grades.objects.get(student_email=request.user.username,exam_no=exam).exam_grade
 			except:
 				exam.exam_grade = None

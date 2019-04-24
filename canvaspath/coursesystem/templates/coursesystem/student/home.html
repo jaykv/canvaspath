@@ -51,7 +51,7 @@
                     </div>
                     <div align="center">
 						<br/>
-						<h6>{{reqeuest.user.student.major}} Student</h6>
+						<h6>{{request.user.student.major}} Student</h6>
           				<span class="profile-email">{{request.user.username}}</span>
           				<br/>
           				<br/>
@@ -67,8 +67,6 @@
             </div>
             <hr />
             <div align="center">
-                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
-                </div>
                 <strong>
                     EE320
                 </strong>
@@ -78,8 +76,6 @@
             </div>
             <hr />
             <div align="center">
-                <div align="center" style="height: 30px;width: 30px;border-radius: 50%;background-image:url(images/image3.jpeg);">
-                </div>
                 <strong>
                     MATH141
                 </strong>
@@ -128,7 +124,13 @@
 					  <div class="card-body">
 					    <p class="card-text">{{hw.hw_details}}</p>
 					    <a href="#" class="btn btn-primary disabled">Upload</a>
+					    <div style="margin-top:5px;" class="row">
+					    	<div class="col-md-4">Min: {{hw.min}}</div>
+					    	<div class="col-md-4">Avg: {{hw.avg|floatformat:"2"}}</div>
+					    	<div class="col-md-4">Max: {{hw.max}}</div>
+						</div>
 					  </div>
+
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
 					  	<span class="text-light bg-success rounded float-right" style="padding-right:3px;padding-left:3px;">Submitted</span>
@@ -151,6 +153,11 @@
 				    <p><div class="card">
 					  <div class="card-body">
 					    <p class="card-text">{{exam.exam_details}}</p>
+					    <div style="margin-top:5px;" class="row">
+					    	<div class="col-md-4">Min: {{exam.min}}</div>
+					    	<div class="col-md-4">Avg: {{exam.avg|floatformat:"2"}}</div>
+					    	<div class="col-md-4">Max: {{exam.max}}</div>
+						</div>
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
