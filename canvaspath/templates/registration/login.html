@@ -1,38 +1,19 @@
 {% extends "./base_generic.html" %}
 
 {% block content %}
-
-{% if form.errors %}
-  <p>Your username and password didn't match. Please try again.</p>
-{% endif %}
-
-{% if next %}
-  {% if user.is_authenticated %}
-    <p>Your account doesn't have access to this page. To proceed,
-    please login with an account that has access.</p>
-  {% endif %}
-{% endif %}
-{% if user.is_authenticated%}
-<p> You are already logged in! </p>
-{%else%}
-
-<form method="post" action="{% url 'login' %}">
-{% csrf_token %}
-
-<div>
-  <td>{{ form.username.label_tag }}</td>
-  <td>{{ form.username }}</td>
-</div>
-<div>
-  <td>{{ form.password.label_tag }}</td>
-  <td>{{ form.password }}</td>
-</div>
-
-<div>
-  <input type="submit" value="login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</div>
+<h1 class="text-center h3 mb-3 font-weight-normal">CanvasPath</h1>
+<form style="width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;" role="form" method="post" action="{% url 'login' %}">{% csrf_token %}
+    <div class="form-group">
+        {% for field in form %}
+            <div class="input-group">
+                <input required autofocus autocomplete="off" class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" value="" type="text" /> 
+            </div>
+        {% endfor %}
+        <button style="margin-top:15px;" class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
+        <input type="hidden" name="next" value="{{ next }}" />
+    </div>
 </form>
-
-{% endif%}
 {% endblock %}
