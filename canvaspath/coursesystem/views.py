@@ -2,9 +2,11 @@ from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.utils.html import escape
 
 from coursesystem.models import * 
 from . import populate
+import json
 
 def is_student(user):
 	return Student.objects.filter(user=user).exists()
@@ -65,14 +67,26 @@ def student_home(request):
 		profs = [x for x in Professor.objects.filter(email__in=prof_emails)]
 		course.profs = profs
 
-		hws = [x for x in Homework_grades.objects.filter(student_email=request.user.username,course_section=course.course_section)]
+		hws = [x for x in Homework.objects.filter(course_section=course.course_section)]
+
+		for hw in hws:
+			try:
+				hw.hw_grade = Homework_grades.objects.get(student_email=request.user.username,hw_no=hw).hw_grade
+			except:
+				hw.hw_grade = None
 		course.hws = hws
 
-		exams = [x for x in Exam_grades.objects.filter(student_email=request.user.username,course_section=course.course_section)]
+
+		exams = [x for x in Exams.objects.filter(course_section=course.course_section)]
+		for exam in exams:
+			try:
+				exam.exam_grade = Exam_grades.objects.get(student_email=request.user.username,exam_no=exam).exam_grade
+			except:
+				exam.exam_grade = None
 		course.exams = exams
 
-		grades_hw = [x.hw_grade for x in hws]
-		grades_exams = [x.exam_grade for x in exams]
+		grades_hw = [x.hw_grade for x in hws if x.hw_grade]
+		grades_exams = [x.exam_grade for x in exams if x.exam_grade]
 
 		total_grade = 0
 		if grades_hw:
@@ -130,10 +144,32 @@ def admin_home(request):
 
 	return render(request,'coursesystem/admin/home.html')
 
-
-
 def add_assignment(request):
-	
+	try:
+		list_data = json.loads(request.GET.get('data'))
+		form_data = {x['name']:x['value'] for x in list_data}
+
+		section = int(float(form_data['section']))
+		assignment_no = int(float(form_data['assignment_no']))
+		assignment_details = escape(form_data['assignment_details'])
+		assignment_type = escape(form_data['assignment_type'])
+
+		course_section = Sections.objects.get(pk=section)
+		if assignment_type == 'Homework':
+			new_hw = Homework(course_section=course_section, hw_details=assignment_details, hw_no=assignment_no)
+			new_hw.save()
+		elif assignment_type == 'Exam':
+			new_exam = Exams(course_section=course_section, exam_details=assignment_details, exam_no=assignment_no)
+			new_exam.save()
+		else:
+			data = {'success': False}
+			pass
+
+		data = {'success': True}
+	except Exception as e:
+		print(e)
+		data = {'success': False}
+
 	return JsonResponse(data)
 
 def delete_exam(request):

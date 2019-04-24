@@ -16,6 +16,10 @@
 	</head>
 	
 	<body style="background-color:#edf0f2;"> 
+    <div class="alert alert-primary clearfix d-none" role="alert" id="alert">
+      <span id="alert-msg"></span><button type="button" class="btn btn-sm btn-primary float-right" onclick="closeAlert();">Close</button>
+    </div>
+
 		{% block content %}{% endblock %}
 
   	<!-- Optional JavaScript -->
@@ -31,6 +35,16 @@
     </script>
 
     <script>
+      function alert(message) {
+        document.getElementById('alert-msg').innerHTML = message; // set message text
+        if (document.getElementById('alert').classList.contains('d-none')) document.getElementById('alert').classList.remove('d-none'); // Display alert-box
+      }
+
+      function closeAlert() {
+        document.getElementById('alert').classList.add('d-none'); // hide alert-box
+        document.getElementById('alert-msg').innerHTML = ''; // reset message
+      }
+
         $(".deletehw").click(function () {
             var hw_id = this.id;
             console.log(hw_id)
@@ -68,18 +82,22 @@
 
         $(".addassignment").click(function () {
             var sectionID = this.id;
-            var dataVal = $('.add-assignment-form-' + sectionID).serializeArray();
-
+            var form_id = '.add-assignment-form-' + sectionID;
+            console.log(sectionID);
+            var dataVal = $(form_id).serializeArray();
+            dataVal.push({name:'section', value:sectionID});
+            console.log(dataVal);
+            var data = JSON.stringify(dataVal);
             $(this).attr('disabled', 'disabled');
             $.ajax({
                 url: '{% url 'add_assignment' %}',
                 data: {
-                    'data': dataVal
+                    'data': data
                 },
                 dataType: 'json',
                 context: this,
                 success: function (data) {
-                    console.log('done');
+                    location.reload();
                 },
               }).done(function(data) {});
         });

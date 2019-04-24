@@ -116,10 +116,17 @@
 
 	            {%for hw in enroll.hws%}
 	            <details>
-				    <summary>Homework {{hw.hw_no.hw_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{hw.hw_grade}}/100</span></summary>
+				    <summary>Homework {{hw.hw_no}}<span style="font-weight: 700;" class="badge badge-pill 
+				    	{{ hw.hw_grade|yesno:'badge-primary,badge-danger' }} float-right">
+				    	{%if hw.hw_grade == None%}
+				    		Ungraded
+				    	{%else%}
+				    		{{hw.hw_grade}}/100
+				    	{%endif%}
+				    </span></summary>
 				    <p><div class="card">
 					  <div class="card-body">
-					    <p class="card-text">{{hw.hw_no.hw_details}}</p>
+					    <p class="card-text">{{hw.hw_details}}</p>
 					    <a href="#" class="btn btn-primary disabled">Upload</a>
 					  </div>
 					  <div class="card-footer text-muted">
@@ -133,10 +140,17 @@
 
 				{%for exam in enroll.exams%}
 	            <details>
-				    <summary>Exam {{exam.exam_no.exam_no}}<span style="font-weight: 700;" class="badge badge-pill badge-primary float-right">{{exam.exam_grade}}/100</span></summary>
+				    <summary>Exam {{exam.exam_no}}<span style="font-weight: 700;" class="badge badge-pill 
+				    	{{ exam.exam_grade|yesno:'badge-primary,badge-danger' }} float-right">
+				    	{%if exam.exam_grade == None%}
+				    		Ungraded
+				    	{%else%}
+				    		{{exam.exam_grade}}/100
+				    	{%endif%}
+				    </span></summary>
 				    <p><div class="card">
 					  <div class="card-body">
-					    <p class="card-text">{{exam.exam_no.exam_details}}</p>
+					    <p class="card-text">{{exam.exam_details}}</p>
 					  </div>
 					  <div class="card-footer text-muted">
 					  	<span class="text-dark">Due: 5/9/2019</span>
