@@ -1,12 +1,254 @@
 {% extends '.././base_generic.html' %}
-
-{% block title %}Home{% endblock %}
-
+{% block title %}<title>Home</title>{% endblock %}
 {% block content %}
-{% if user.is_authenticated %}
-  Logged in as admin: {{ user.username }}!
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-{% endif %}
+{% load static %}
+{% load filters %}
+<!-- Navigation bar -->
+<nav class="navbar border-bottom border-grey sticky-top navbar-expand-lg navbar-light" style="background-color: #fff;">
+    <div class="navbar-collapse collapse justify-content-between">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="../"><i class="fas fa-home" style="color:#8CCEF9;"></i> Home</a>
+            </li>
+            <li>
+                <a class="nav-link" href="#"><i class="fas fa-envelope" style="color:#8CCEF9;"></i> Inbox</a>
+            </li>
+            <li>
+                <a class="nav-link" href="#"><i class="fas fa-calendar" style="color:#8CCEF9;"></i> Calendar</a>
+            </li>
+            <button id="referral" type="button" class="btn btn-sm btn-follow"><i class="fas fa-bullhorn"></i> Alerts</button>
+        </ul>
+        <div>
+		    <a class="btn btn-search-bar" href="#" role="button"><i class="fas fa-question-circle"></i> Help</a>
+            <a class="btn" href="/logout/"><i class="fa fa-sign-out-alt"></i> Logout</a>
+        </div>
+        <ul class="navbar-nav">
+            <div class="dropdown navbar-user-dropdown">
+                <button class="btn btn-secondary dropdown-toggle btn-circle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="/password_change">Settings</a>
+                </div>
+            </div>
+            <form class="navbar-form" role="search">
+                <div class="input-group-btn">
+                    <button class="btn btn-default btn-search" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+    </div>
+    
+</nav>
+
+<!-- Body of Home Page -->
+<div class='container' style='padding-top: 10px;'>
+    <div class="row justify-content-md-center">
+        <!-- 1st column -->
+        <div class="col-lg-auto col-md-auto col-sm-4" style='background-color:#fff;'>
+            <div class="content-panel">
+                <div class="panel-header">
+                    <div align="center">
+                        <h4 align="center">Lionstate Admin</h4>
+                        <div align="center">
+                            <input type="image" style="height: 100px;width: 100px;border-radius: 50%;" src="{% static 'images/image3.jpeg' %}">
+                        </div>
+                    </div>
+                    <div align="center">
+						<br/>
+						<h6>Admin</h6>
+          				<span class="profile-email">{{request.user.username}}</span>
+          				<br/>
+          				<br/>
+          				<button type="submit" name="profile" class="btn btn-follow">Profile</button>
+          			</div> 
+                </div>
+            </div>
+            <hr />
+            <div class="content-panel">
+                <div class="panel-header">
+                    <h5 align="center"><span>Alerts</span></h5>
+                    <div align="center"><button type="submit" name="profile" class="btn btn-follow">New</button></div>
+                </div>
+            </div>
+            <hr />
+            <div align="center">
+                <strong>
+                    April 24, 2019
+                </strong>
+            </div>
+            <div align="center" style="max-width:200px;">
+                Maintenance will be taking place next week 5/1/2019 between 2pm to 5pm.
+            </div>
+            <hr />
+            <div align="center">
+                <strong>
+                    April 20, 2019
+                </strong>
+            </div>
+            <div align="center" style="max-width:200px;">
+                Faculty SRTE's are out, please check your email for instructions on how to complete them.
+            </div>
+            <hr />
+        </div>
+        <!-- 2nd column -->
+        <div class="col-lg-9 col-md-7 col-sm-12" style='background-color:#fff; margin-right: 10px; margin-left: 10px'>
+            <br />
+            <h4> <span style="padding-top:20px;padding-right: 20px; padding-left:20px;">Courses</span> 
+            	<button type="button" data-toggle="modal" data-target="#add-course-modal" class="btn btn-md btn-success float-right">Add course</button>
+            	<button style="margin-right:15px;" type="button" data-toggle="modal" data-target="#enroll-modal" class="btn btn-md btn-primary float-right">Enroll</button></h4>
+            <br />
+            <!-- Add Course Modal -->
+				<div class="modal fade" id="add-course-modal" tabindex="-1" role="dialog" aria-labelledby="add-course-modal" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="add-assignment-modal">New course</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <form class="add-course-form">
+				          <div class="form-group">
+				            <label for="course-id" class="col-form-label">Course ID:</label>
+							<input type="text" class="form-control" placeholder="CMPSC431W" id="course-id" name="course_id" required>
+				          </div>
+				       	  <div class="form-group">
+				            <label for="course-title" class="col-form-label">Course Title:</label>
+							<input type="text" class="form-control" placeholder="Database Management" id="course-title" name="course_title" required>
+				          </div>
+				          <div class="form-group">
+				            <label for="section-no" class="col-form-label">Section Number:</label>
+				            <input type="number" class="form-control" id="section-no" name="section_no" required>
+				          </div>
+				          <div class="form-group">
+				            <label for="course-desc" class="col-form-label">Course Description:</label>
+				            <textarea class="form-control" id="course-desc" name="course_desc" required></textarea>
+				          </div>
+				        </form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" class="addcourse btn btn-primary">Submit</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+				<!-- Enroll Modal -->
+				<div class="modal fade" id="enroll-modal" tabindex="-1" role="dialog" aria-labelledby="enroll-modal" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="add-assignment-modal">Enroll student</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <form class="add-student-form">
+				          <div class="form-group">
+				            <label for="student-id" class="col-form-label">Student ID:</label>
+							<input type="text" class="form-control" placeholder="abc1234@lionstate.edu" id="student-id" name="student_id" required>
+				          </div>
+				       	  <div class="form-group">
+				            <label for="course-title" class="col-form-label">Course ID:</label>
+							<input type="text" class="form-control" placeholder="CMPEN331" id="course-title" name="course_title" required>
+				          </div>
+				          <div class="form-group">
+				            <label for="section-no" class="col-form-label">Section Number:</label>
+				            <input type="number" class="form-control" placeholder=1 id="section-no" name="section_no" required>
+				          </div>
+				        </form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" class="enrollcourse btn btn-primary">Submit</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+
+            {%for section in courses %}
+            <div id="course-{{section.id}}" class="card" style="margin-bottom:15px;">
+            	<div class="card-header">
+	            <h5 style="margin:0;padding:0;">
+	                {{section.course_id.course_id}} Section {{section.sec_no}} &ndash; {{section.course_id.course_name}}
+	                <button id="{{section.id}}" class="deletecourse btn btn-sm btn-danger float-right" href="#"><i class="fas fa-trash"></i></button>
+	            </h5>
+	            {%for prof in section.profs%}
+	            <strong>
+	            	
+	            		<a href="mailto:{{prof.email}}">{{prof.name}}</a> 
+	            	
+	            </strong>&ndash; <span style="margin-right:15px;">{{prof.office_address}}</span>
+	            {%endfor%}
+	            </div>
+	            <div class="card-body">
+	            <div id="posttext" class="posttext">{{section.course_id.course_description}}</div>
+	            <hr />
+	            <h5>Students</h5>
+	            <br />
+	            <details style="margin-bottom:10px;" id="students-{{section.id}}">
+				    <summary>Students</summary>
+				    <p><div class="card">
+					  <div class="card-body">
+					    <div class="row">
+					    {%for student in section.students%}
+					    	<div id="student-{{section.id}}-{{student.id}}" style="margin-bottom:5px;" class="col-md-6"><button data-sectionid="{{section.id}}" id="{{student.id}}" style="font-size:13px;" class="deleteenrolled btn btn-xs btn-danger float-left" href="#"><i class="fas fa-trash"></i></button> <abbr data-toggle="tooltip" title="{{student.email}}" style="margin-left:5px;">{{student.name}}</abbr> </div>
+					    {%endfor%}
+						</div>
+					    <br/>
+					  </div>
+					</div></p>
+				</details>
+				<hr />
+
+				<div class="modal fade" id="add-team-modal-{{section.id}}" tabindex="-1" role="dialog" aria-labelledby="add-team-modal-{{section.id}}" aria-hidden="true">
+				  <div class="modal-dialog" role="document">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h5 class="modal-title" id="add-team-modal">New team</h5>
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				          <span aria-hidden="true">&times;</span>
+				        </button>
+				      </div>
+				      <div class="modal-body">
+				        <form class="add-team-form-{{section.id}}">
+				          <div class="form-group">
+				            <label for="team-id" class="col-form-label">Team ID:</label>
+				            <input type="number" class="form-control" id="team-id" name="team_id" required>
+				          </div>
+				          <div class="form-group">
+				            <label for="project-no" class="col-form-label">Project Number:</label>
+				            <input type="number" class="form-control" id="project-no" name="project_no" required>
+				          </div>
+						  <div class="form-group">
+				            <label for="assignment-type" class="col-form-label">Team Members:</label>
+				            <select size="10" class="form-control" id="assignment-type" name="assignment_type" multiple required>
+				            	{%for student in section.students%}
+						      <option value="{{student.email}}">{{student.name}} &ndash; {{student.email}}</option>
+						      	{%endfor%}
+						    </select>
+				          </div>
+				        </form>
+				      </div>
+				      <div class="modal-footer">
+				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				        <button type="button" id="{{section.id}}" class="addteam btn btn-primary">Submit</button>
+				      </div>
+				    </div>
+				  </div>
+				</div>
+	        	</div>
+	        	<div class="card-footer text-muted">
+				  	{%if section.section_type == 'Cap'%}
+				  	<span class="text-light bg-info rounded float-left" style="padding-right:3px;padding-left:3px;">Capstone</span>
+				  	{%endif%}
+				</div>
+            </div>
+            {%endfor%}
+
+            <hr />
+        </div>
+    </div>
+</div>
 {% endblock %}

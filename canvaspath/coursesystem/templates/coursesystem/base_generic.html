@@ -47,7 +47,6 @@
 
         $(".deletehw").click(function () {
             var hw_id = this.id;
-            console.log(hw_id)
             $(this).attr('disabled', 'disabled');
             $.ajax({
                 url: '{% url 'delete_hw' %}',
@@ -64,7 +63,6 @@
 
         $(".deleteexam").click(function () {
             var exam_id = this.id;
-            console.log(exam_id)
             $(this).attr('disabled', 'disabled');
             $.ajax({
                 url: '{% url 'delete_exam' %}',
@@ -75,6 +73,40 @@
                 context: this,
                 success: function (data) {
                   $('#exam-' + exam_id).remove();
+                },
+              });
+        });
+
+        $(".deletecourse").click(function () {
+            var section_id = this.id;
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'delete_course' %}',
+                data: {
+                  'section_id': section_id
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                  $('#course-' + section_id).remove();
+                },
+              });
+        });
+        
+        $(".deleteenrolled").click(function () {
+            var section_id = $(this).data('sectionid');
+            var student_id = this.id;
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'delete_enrolled' %}',
+                data: {
+                  'section_id': section_id,
+                  'student_id': student_id,
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                  $('#student-' + section_id + '-' + student_id).remove();
                 },
               });
         });

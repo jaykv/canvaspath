@@ -150,7 +150,23 @@ def admin_home(request):
 	if not request.user.is_authenticated or not request.user.is_superuser:
 		return redirect('/')
 
-	return render(request,'coursesystem/admin/home.html')
+	courses = Sections.objects.all().select_related()
+	for section in courses:
+		teaching_team_id = section.prof_team.teaching_team_id
+		prof_members = Prof_team_members.objects.filter(teaching_team_id=teaching_team_id)
+		prof_emails = [x.prof_email for x in prof_members]
+		profs = Professor.objects.filter(email__in=prof_emails)
+		section.profs = profs
+		
+		student_enrolls = Enrolls.objects.filter(course_section=section)
+		student_emails = [x.student_email for x in student_enrolls]
+
+		section.students = Student.objects.filter(email__in=student_emails)
+
+		context = {
+			'courses': courses
+		}
+	return render(request,'coursesystem/admin/home.html', context)
 
 def add_assignment(request):
 	try:
@@ -235,6 +251,31 @@ def update_grades(request):
 		data = {'success':False}
 		pass
 	return JsonResponse(data)
+
+
+def delete_course(request):
+	sectionid = request.GET.get('section_id')
+	try:
+		Sections.objects.get(pk=sectionid).delete()
+		data = {'success': True}
+	except:
+		data = {'success': False}
+	return JsonResponse(data)
+
+def delete_enrolled(request):
+	section_id = request.GET.get('section_id')
+	student_id = request.GET.get('student_id')
+
+	try:
+		course_section = Sections.objects.get(pk=section_id)
+		student = Student.objects.get(pk=student_id)
+		Enrolls.objects.get(course_section=course_section, student_email=student.email).delete()
+		data = {'success': True}
+	except Exception as e:
+		print(e)
+		data = {'success': False}
+	return JsonResponse(data)
+
 def delete_exam(request):
 	examid = request.GET.get('exam_id')
 	try:

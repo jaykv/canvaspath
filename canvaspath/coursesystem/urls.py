@@ -11,6 +11,8 @@ urlpatterns = [
 	# path('signup/',views.signup,name='signup'),
 	url(r'^ajax/delete-hw/$', views.delete_hw, name='delete_hw'),
 	url(r'^ajax/delete-exam/$', views.delete_exam, name='delete_exam'),
+	url(r'^ajax/delete-course/$', views.delete_course, name='delete_course'),	
+	url(r'^ajax/delete-enrolled/$', views.delete_enrolled, name='delete_enrolled'),	
 	url(r'^ajax/add-assignment/$', views.add_assignment, name='add_assignment'),
 	url(r'^ajax/update-grades/$', views.update_grades, name='update_grades'),
 ]
