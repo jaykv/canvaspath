@@ -119,7 +119,6 @@ def faculty_home(request):
 			profs = [x for x in Professor.objects.filter(email__in=prof_emails)]
 			section.profs = profs
 			
-
 			hws = [x for x in Homework.objects.filter(course_section=section)]
 			section.hws = hws
 
@@ -127,8 +126,17 @@ def faculty_home(request):
 			section.exams = exams
 			
 			student_emails = [x.student_email for x in Enrolls.objects.filter(course_section=section)]
-			section.students = [x for x in Student.objects.filter(email__in=student_emails)]
-
+			students = [x for x in Student.objects.filter(email__in=student_emails)]
+			for student in students:
+				student_hws = Homework_grades.objects.filter(course_section = section, student_email=student.email)
+				student_exams = Exam_grades.objects.filter(course_section = section, student_email=student.email) 
+				student.hw = {}
+				for student_hw in student_hws:
+					student.hw[student_hw.hw_no.id] = student_hw.hw_grade
+				student.exam = {}
+				for student_exam in student_exams:
+					student.exam[student_exam.exam_no.id] = student_exam.exam_grade
+			section.students = students
 			section.grade = '80'
 			section.letter_grade = 'A'
 
@@ -172,6 +180,61 @@ def add_assignment(request):
 
 	return JsonResponse(data)
 
+def update_grades(request):
+	try:
+		list_data = json.loads(request.GET.get('data'))
+		form_data = {x['name']:x['value'] for x in list_data}
+
+		section = int(float(form_data['section']))
+		assignment_type = form_data['assignment_type']
+		assignment_id = int(float(form_data['assignment_no']))
+
+		for x in ['assignment_type', 'section', 'assignment_no']:
+			form_data.pop(x)
+
+		course_section = Sections.objects.get(pk=section)
+		if assignment_type == 'Homework':
+			hw_no = Homework.objects.get(pk=assignment_id)
+			for email, grade in form_data.items():
+				student_email = escape(email)
+				if not student_email:
+					continue
+
+				try:
+					hw_grade = float(grade)
+				except:
+					Homework_grades.objects.filter(course_section=course_section, hw_no=hw_no, student_email=student_email).delete()
+					continue
+
+				obj, created = Homework_grades.objects.update_or_create(
+						course_section=course_section, hw_no=hw_no, student_email=student_email, 
+						defaults = {'hw_grade': hw_grade}
+					)
+		elif assignment_type == 'Exam':
+			exam_no = Exams.objects.get(pk=assignment_id)
+			for email, grade in form_data.items():
+				student_email = escape(email)
+
+				if not student_email:
+					continue
+
+				try:
+					exam_grade = float(grade)
+				except:
+					Exam_grades.objects.filter(course_section=course_section, exam_no=exam_no, student_email=student_email).delete()
+					continue
+
+				obj, created = Exam_grades.objects.update_or_create(
+						course_section=course_section, exam_no=exam_no, student_email=student_email, 
+						defaults = {'exam_grade': exam_grade}
+					)
+
+		data = {'success':True}
+	except Exception as e:
+		print(e)
+		data = {'success':False}
+		pass
+	return JsonResponse(data)
 def delete_exam(request):
 	examid = request.GET.get('exam_id')
 	try:

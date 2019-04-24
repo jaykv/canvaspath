@@ -2,6 +2,7 @@
 {% block title %}<title>Home</title>{% endblock %}
 {% block content %}
 {% load static %}
+{% load filters %}
 <!-- Navigation bar -->
 <nav class="navbar border-bottom border-grey sticky-top navbar-expand-lg navbar-light" style="background-color: #fff;">
     <div class="navbar-collapse collapse justify-content-between">
@@ -15,7 +16,7 @@
             <li>
                 <a class="nav-link" href="#"><i class="fas fa-calendar" style="color:#8CCEF9;"></i> Calendar</a>
             </li>
-            <button id="referral" type="button" class="btn btn-sm btn-follow" data-toggle="popover" title="Share your referral link" data-content="Share the following link <a href='#'>https://socialnetdata.org/signup</a> with your friends for a chance to win a prize!"><i class="fas fa-bullhorn"></i> Alerts</button>
+            <button id="referral" type="button" class="btn btn-sm btn-follow"><i class="fas fa-bullhorn"></i> Alerts</button>
         </ul>
         <div>
 		    <a class="btn btn-search-bar" href="#" role="button"><i class="fas fa-question-circle"></i> Help</a>
@@ -161,21 +162,21 @@
 					    	<summary>Grades</summary>
 					    	<p>
 					    		<ul class="list-group list-group-flush">
-						    		<form>
+						    		<form class="update-grades-form-{{section.id}}-{{hw.id}}">
 						    		{%for student in section.students%}
 							  			<li class="list-group-item">
 							  				<abbr data-toggle="tooltip" title="{{student.email}}">{{student.name}}</abbr>
 
 							  				<span class="float-right">
 							  					Grade:
-							  					<input type="number" id="grade-{{student.id}}" name="grade-{{student.id}}" min="0" max="100">
+							  					<input type="number" value="{{student.hw|key:hw.id}}" id="grade-{{student.id}}" name="{{student.email}}" min="0" max="100">
 							  				</span>
 							  			</li>
 							  		{%endfor%}
 							  		<br/>
-							  		<button type="submit" class="btn btn-primary float-right">Save</button>
 							  		</form>
 								</ul>
+								<button id="{{section.id}}-{{hw.id}}" data-assignment-type="Homework" data-assignment-no="{{hw.id}}" data-section="{{section.id}}" type="button" class="updategrades btn btn-primary float-right">Update</button>
 							</p>
 					    </details>
 					    <br/>
@@ -202,21 +203,21 @@
 					    	<summary>Grades</summary>
 					    	<p>
 					    		<ul class="list-group list-group-flush">
-						    		<form>
+						    		<form class="update-grades-form-{{section.id}}-{{exam.id}}">
 						    		{%for student in section.students%}
 							  			<li class="list-group-item">
 							  				<abbr title="{{student.email}}">{{student.name}}</abbr>
 
 							  				<span class="float-right">
-							  					Grade:
-							  					<input type="number" id="grade-{{student.id}}" name="grade-{{student.id}}" min="0" max="100">
+							  					Grade: 
+							  					<input type="number" value="{{student.exam|key:exam.id}}" id="grade-{{student.email}}" name="{{student.email}}" min="0" max="100">
 							  				</span>
 							  			</li>
 							  		{%endfor%}
 							  		<br/>
-							  		<button type="submit" class="btn btn-primary float-right">Save</button>
 							  		</form>
 								</ul>
+								<button id="{{section.id}}-{{exam.id}}" data-assignment-type="Exam" data-assignment-no="{{exam.id}}" data-section="{{section.id}}" type="button" class="updategrades btn btn-primary float-right">Update</button>
 							</p>
 					    </details>
 					  </div>

@@ -79,14 +79,35 @@
               });
         });
 
+        $(".updategrades").click(function () {
+            var sectionID = this.id;
+            var form_id = '.update-grades-form-' + sectionID;
+            var dataVal = $(form_id).serializeArray();
+            dataVal.push({name:'section', value:$(this).data("section")});
+            dataVal.push({name:'assignment_type', value:$(this).data("assignment-type")});
+            dataVal.push({name:'assignment_no', value:$(this).data("assignment-no")});
+            var data = JSON.stringify(dataVal);
+            $(this).attr('disabled', 'disabled');
+            $.ajax({
+                url: '{% url 'update_grades' %}',
+                data: {
+                    'data': data
+                },
+                dataType: 'json',
+                context: this,
+                success: function (data) {
+                    //location.reload();
+                },
+              }).done(function(data) {});
+        });
+
 
         $(".addassignment").click(function () {
             var sectionID = this.id;
             var form_id = '.add-assignment-form-' + sectionID;
-            console.log(sectionID);
             var dataVal = $(form_id).serializeArray();
             dataVal.push({name:'section', value:sectionID});
-            console.log(dataVal);
+
             var data = JSON.stringify(dataVal);
             $(this).attr('disabled', 'disabled');
             $.ajax({
