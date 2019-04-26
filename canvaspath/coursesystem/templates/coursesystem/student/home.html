@@ -175,14 +175,21 @@
 					<h6>Team Members <span class="badge badge-success float-right">Team ID: 1</span></h6>
 					<div>
 						<ul class="list-group list-group-flush">
-						  <li class="list-group-item">Cras justo odio</li>
-						  <li class="list-group-item">Dapibus ac facilisis in</li>
-						  <li class="list-group-item">Morbi leo risus</li>
-						  <li class="list-group-item">Porta ac consectetur ac</li>
-						  <li class="list-group-item">Vestibulum at eros</li>
+						  <li class="list-group-item">Alisa Lynch</li>
+						  <li class="list-group-item">Anastasia Shields</li>
+						  <li class="list-group-item">Kenyon Rohan</li>
+						  <li class="list-group-item">Napoleon Fay</li>
+						  <li class="list-group-item">Melvin D'Amore</li>
 						</ul>
 					</div>
-					<h6>Sponsor: Dr. Bob Jones</h6>
+					<h6>Sponsor</h6>
+	            {%for prof in enroll.profs%}
+	            <strong>
+	            	
+	            		<a href="mailto:{{prof.email}}">{{prof.name}}</a> 
+	            	
+	            </strong>&ndash; <span>{{prof.office_address}}</span>
+	            {%endfor%}
 				</div>
 				{%endif%}
 	        	</div>
