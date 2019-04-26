@@ -1,3 +1,21 @@
+# Installation
+Install dependencies and setup pipenv
+```
+pip install pipenv
+pipenv install 
+```
+  
+# Usage
+Run django server
+```
+pipenv shell
+cd canvaspath/
+python manage.py runserver
+```
+
+
+
+
 # CMPSC 431W Project
 
 You will be able to access the two CSV files in the GitHub classroom repository “Project”. We suggest using Pandas (Python library) to parse the CSV files. Please note the following:
